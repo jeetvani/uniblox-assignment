@@ -26,9 +26,6 @@ export default defineConfig({
       },
     },
     css: true,
-    env: {
-      VITE_API_BASE_URL: "http://localhost",
-    },
     environment: "jsdom",
     exclude: ["tests/e2e/**", "node_modules/**", "dist/**"],
     restoreMocks: true,

@@ -43,12 +43,9 @@ cp .env.example .env.local
 
 ```env
 API_PROXY_TARGET=http://localhost:4000
-VITE_API_BASE_URL=
 ```
 
 - Keep `API_PROXY_TARGET` at `http://localhost:4000` when using the included mock API.
-- Leave `VITE_API_BASE_URL` empty during normal local development so the frontend uses Vite's `/api` proxy.
-- Set `VITE_API_BASE_URL` to a complete API origin, such as `https://api.example.com`, when the frontend and API are hosted separately.
 - Environment files ending in `.local` are ignored by Git and should not contain committed secrets.
 
 Restart Vite after changing an environment variable.
@@ -77,12 +74,11 @@ Open the local URL printed by Vite, normally `http://localhost:5173`.
 
 ## Environment variables
 
-| Variable            | Purpose                                     | Default                                |
-| ------------------- | ------------------------------------------- | -------------------------------------- |
-| `API_PROXY_TARGET`  | Vite development proxy target for `/api`    | `http://localhost:4000`                |
-| `VITE_API_BASE_URL` | Optional API origin for a deployed frontend | Empty; requests use the current origin |
+| Variable           | Purpose                                  | Default                 |
+| ------------------ | ---------------------------------------- | ----------------------- |
+| `API_PROXY_TARGET` | Vite development proxy target for `/api` | `http://localhost:4000` |
 
-Vite exposes only variables prefixed with `VITE_` to browser code. `API_PROXY_TARGET` is read only by the local Vite server configuration.
+`API_PROXY_TARGET` is read only by the local Vite server configuration. Browser requests always use relative `/api` paths and contain no environment-specific domain.
 
 ## Quality commands
 

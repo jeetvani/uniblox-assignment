@@ -20,7 +20,7 @@ TanStack Query manages remote state: list and detail requests, loading and error
 
 The code is grouped by feature and responsibility. API functions, query hooks, query keys, domain types, Zustand state, queue components, details, decisions, and shared UI primitives have predictable locations. Reusable components were created only where they provide actual consistency rather than attempting a full design system.
 
-The supplied mock API runs independently on port 4000. Vite proxies `/api` during local development, while `VITE_API_BASE_URL` supports another API origin. The extended filters add optional query parameters to the supplied mock server. This is a documented prototype extension; the assignment's original routes and required parameters remain intact.
+The supplied mock API runs independently on port 4000. Browser requests use relative `/api` paths, and Vite proxies them to the configurable `API_PROXY_TARGET` during development. The extended filters add optional query parameters to the supplied mock server. This is a documented prototype extension; the assignment's original routes and required parameters remain intact.
 
 ## Reliability and edge cases
 

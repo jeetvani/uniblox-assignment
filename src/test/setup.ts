@@ -5,7 +5,21 @@ import { afterAll, afterEach, beforeAll, vi } from "vitest"
 
 import { server } from "./server"
 
-beforeAll(() => server.listen({ onUnhandledRequest: "error" }))
+const nativeFetch = globalThis.fetch
+
+beforeAll(() => {
+  server.listen({ onUnhandledRequest: "error" })
+  const interceptedFetch = globalThis.fetch
+
+  globalThis.fetch = ((input: RequestInfo | URL, init?: RequestInit) => {
+    const resolvedInput =
+      typeof input === "string" && input.startsWith("/")
+        ? new URL(input, "http://localhost")
+        : input
+
+    return interceptedFetch(resolvedInput, init)
+  }) as typeof fetch
+})
 
 afterEach(() => {
   cleanup()
@@ -13,7 +27,10 @@ afterEach(() => {
   vi.useRealTimers()
 })
 
-afterAll(() => server.close())
+afterAll(() => {
+  server.close()
+  globalThis.fetch = nativeFetch
+})
 
 Object.defineProperty(window, "matchMedia", {
   configurable: true,

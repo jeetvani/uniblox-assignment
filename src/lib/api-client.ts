@@ -1,5 +1,3 @@
-import { env } from "@/lib/env"
-
 type ApiErrorBody = {
   error?: {
     code?: unknown
@@ -53,7 +51,7 @@ export async function apiRequest<T>(
   let response: Response
 
   try {
-    response = await fetch(`${env.apiBaseUrl}${path}`, {
+    response = await fetch(path, {
       ...options,
       headers: {
         Accept: "application/json",
