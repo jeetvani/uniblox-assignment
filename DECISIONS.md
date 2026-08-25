@@ -40,4 +40,6 @@ A substantial amount of implementation and test code was written with Codex. I o
 
 ## If I had another day
 
-I would add exhaustive runtime schemas, screen-reader and real-device testing, URL-persisted filters, and browser coverage for the mock API's retry and conflict fixtures. I would also revisit whether extended filtering should remain a mock-server extension or move behind an agreed production API contract.
+I would test the workbench with real operations reviewers and measure how quickly they can find, understand, and resolve a submission. Their feedback would guide improvements to information priority, filter defaults, decision wording, and the amount of detail visible before opening the sheet. I would also explore saved or shareable queue views and clearer indicators for records that are urgent, incomplete, or already being reviewed by someone else.
+
+During implementation, I tried several more expressive interactions, including floating pagination pills, expanding hover states, and stronger motion. Those ideas were visually interesting but made the workbench feel less predictable. I ultimately chose a calmer interface because an operational dashboard should feel professional, trustworthy, and efficient rather than flashy. With another day, I would validate that judgment with users instead of adding animation for its own sake. After the product flow was confirmed, I would complete screen-reader and real-device testing and align the extended-filter behavior with a production API contract.
