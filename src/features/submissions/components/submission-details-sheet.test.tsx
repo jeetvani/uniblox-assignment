@@ -10,6 +10,7 @@ import { server } from "@/test/server"
 import { SubmissionDetailsSheet } from "./submission-details-sheet"
 
 const detailUrl = "http://localhost/api/submissions/:id"
+const decisionUrl = "http://localhost/api/submissions/:id/decision"
 
 describe("SubmissionDetailsSheet", () => {
   it("shows a loading lifecycle while details are pending", () => {
@@ -111,6 +112,46 @@ describe("SubmissionDetailsSheet", () => {
       await screen.findByRole("heading", { name: "Morgan Davis" }),
     ).toBeVisible()
     expect(requests).toBe(2)
+  })
+
+  it("reports an authoritative review conflict instead of claiming success", async () => {
+    const user = userEvent.setup()
+    const initialSubmission = createSubmissionDetail({ status: "NEEDS_REVIEW" })
+    const conflictSubmission = createSubmissionDetail({ status: "APPROVED" })
+    server.use(
+      http.get(detailUrl, () => HttpResponse.json(initialSubmission)),
+      http.post(decisionUrl, () =>
+        HttpResponse.json(
+          {
+            error: {
+              code: "REVIEW_CONFLICT",
+              message: "Another reviewer decided this submission first.",
+            },
+            submission: conflictSubmission,
+          },
+          { status: 409 },
+        ),
+      ),
+    )
+
+    renderWithProviders(
+      <SubmissionDetailsSheet
+        onOpenChange={vi.fn()}
+        submissionId={initialSubmission.id}
+      />,
+    )
+
+    await screen.findByRole("heading", { name: "Morgan Davis" })
+    await user.click(screen.getByRole("button", { name: "Approve" }))
+    await user.click(screen.getByRole("button", { name: "Confirm approval" }))
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Your decision was not recorded. Another reviewer decided this submission first. Current status: approved.",
+    )
+    expect(screen.queryByText("Decision recorded")).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole("button", { name: "Retry approval" }),
+    ).not.toBeInTheDocument()
   })
 
   it("requests closure from the close control", async () => {

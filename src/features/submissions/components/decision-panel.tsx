@@ -1,4 +1,10 @@
-import { Check, CornerUpLeft, LoaderCircle, RotateCcw } from "lucide-react"
+import {
+  AlertTriangle,
+  Check,
+  CornerUpLeft,
+  LoaderCircle,
+  RotateCcw,
+} from "lucide-react"
 import { useState } from "react"
 
 import { AppText } from "@/components/ui/primary"
@@ -44,7 +50,39 @@ export function DecisionPanel({
         ? "The decision could not be saved. Please try again."
         : null
 
-  if (isFinal || decision.isSuccess) {
+  if (decision.isError && isFinal) {
+    return (
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div
+          aria-atomic="true"
+          className="flex items-start gap-2 text-amber-900"
+          role="alert"
+        >
+          <span className="grid size-8 shrink-0 place-items-center rounded-full bg-amber-50">
+            <AlertTriangle aria-hidden="true" className="size-4" />
+          </span>
+          <div>
+            <AppText className="text-amber-950" variant="label">
+              Submission updated by another reviewer
+            </AppText>
+            <AppText className="text-amber-800" variant="caption">
+              Your decision was not recorded. {errorMessage} Current status:{" "}
+              {submission.status?.toLocaleLowerCase("en-US")}.
+            </AppText>
+          </div>
+        </div>
+        <button
+          className="h-10 rounded-lg border border-border bg-white px-4 text-sm font-medium text-slate-700 hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          onClick={onClose}
+          type="button"
+        >
+          Close
+        </button>
+      </div>
+    )
+  }
+
+  if (decision.isSuccess || isFinal) {
     const status = decision.data?.status ?? submission.status
     return (
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
