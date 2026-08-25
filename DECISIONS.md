@@ -28,7 +28,7 @@ The UI accounts for latency, stale search requests, incomplete data, temporary f
 
 Top-level API responses are validated before use, while nullable nested values receive precise fallbacks. Exhaustive nested runtime schema validation was deliberately left out.
 
-The automated suite includes 66 Vitest tests covering API validation, queue state and ordering, decisions, failures, conflicts, cache consistency, lifecycle states, details, filters, keyboard behavior, and pagination. Playwright verifies the highest-risk desktop and mobile flows with the real mock API. Formatting, linting, strict TypeScript, coverage thresholds, browser tests, and the production build form the quality gate.
+The automated suite includes 70 Vitest tests covering API validation, queue state and ordering, decisions, failures, conflicts, cache consistency, lifecycle states, details, filters, keyboard behavior, and pagination. Playwright verifies the highest-risk desktop and mobile flows with the real mock API. Formatting, linting, strict TypeScript, coverage thresholds, browser tests, and the production build form the quality gate.
 
 ## Accessibility
 
