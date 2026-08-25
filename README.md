@@ -19,7 +19,7 @@ bun --version
 ### 1. Get the project
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/jeetvani/uniblox-assignment.git
 cd uniblox-assignment
 ```
 
