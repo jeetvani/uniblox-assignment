@@ -33,7 +33,19 @@ bun install
 
 The committed `bun.lock` provides repeatable dependency versions.
 
-### 3. Configure the environment
+### 3. Fetch the official mock API
+
+The mock API is intentionally not tracked in this submission. Download the latest unchanged files directly from the assignment repository:
+
+```bash
+mkdir -p mock
+curl -fsSL https://raw.githubusercontent.com/neustackapp/assignment/main/fe/mock-api.js -o mock/mock-api.js
+curl -fsSL https://raw.githubusercontent.com/neustackapp/assignment/main/fe/mock-data.json -o mock/mock-data.json
+```
+
+The local `mock/` directory is ignored by Git.
+
+### 4. Configure the development environment
 
 The default local setup works without a custom environment file. To make the configuration explicit or change an API location, copy the example:
 
@@ -45,12 +57,14 @@ cp .env.example .env.local
 API_PROXY_TARGET=http://localhost:4000
 ```
 
-- Keep `API_PROXY_TARGET` at `http://localhost:4000` when using the included mock API.
+- Keep `API_PROXY_TARGET` at `http://localhost:4000` when using the official mock API.
 - Environment files ending in `.local` are ignored by Git and should not contain committed secrets.
+
+`API_PROXY_TARGET` configures Vite's development proxy. It is deliberately not prefixed with `VITE_`, so it is not exposed to browser code.
 
 Restart Vite after changing an environment variable.
 
-### 4. Start the mock API
+### 5. Start the mock API
 
 Start the supplied mock API in one terminal:
 
@@ -58,11 +72,9 @@ Start the supplied mock API in one terminal:
 bun run dev:api
 ```
 
-The API runs at `http://localhost:4000` and keeps decision state in memory. Restart it or send `POST /api/reset` to restore the fixture.
+The official API defaults to `http://localhost:4000` and keeps decision state in memory. Restart it or send `POST /api/reset` to restore the fixture. To use another port, start it with `PORT=4100 bun run dev:api` and set the same URL in `.env.local`.
 
-The `mock/` directory is intentionally committed because it is the API and fixture supplied with the assignment. A fresh clone therefore runs without relying on an external service.
-
-### 5. Start the frontend
+### 6. Start the frontend
 
 Start the frontend in another terminal:
 
@@ -108,7 +120,7 @@ Then run the desktop and mobile browser checks:
 bun run test:e2e
 ```
 
-Playwright starts both services automatically, resets the stateful mock API between tests, and verifies desktop overflow, the extended-filter overlay, mobile cards and filters, keyboard sheet behavior, focus restoration, and a successful approval flow.
+After the official mock files have been downloaded, Playwright starts both services automatically, resets the stateful mock API between tests, and verifies desktop overflow, the extended-filter overlay, mobile cards and filters, keyboard sheet behavior, focus restoration, and a successful approval flow.
 
 Run every check, including Playwright, with:
 
@@ -123,6 +135,6 @@ bun run check:all
 - Feature code lives under `src/features/submissions`; shared UI primitives live under `src/components/ui`.
 - Vite proxies local `/api` traffic to the independently running mock service.
 
-The extended coverage, product, priority, date, and completeness filters add optional query parameters to the supplied mock server. The assignment's documented routes and required query parameters remain unchanged.
+The official mock API and data are downloaded locally, remain unchanged, and are excluded from the submission. Extended coverage, product, priority, date, and completeness filters are derived locally from the API response in the frontend.
 
 See [DECISIONS.md](./DECISIONS.md) for product reasoning, technical trade-offs, accessibility choices, and AI usage.

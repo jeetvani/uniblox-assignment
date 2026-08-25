@@ -7,7 +7,7 @@ import { server } from "@/test/server"
 import { getSubmission, getSubmissions, recordDecision } from "./api"
 
 describe("submissions API", () => {
-  it("serializes every active list filter", async () => {
+  it("sends only filters supported by the supplied mock API", async () => {
     let requestedUrl: URL | undefined
     server.use(
       http.get("http://localhost/api/submissions", ({ request }) => {
@@ -30,16 +30,10 @@ describe("submissions API", () => {
     })
 
     expect(Object.fromEntries(requestedUrl?.searchParams ?? [])).toEqual({
-      completeness: "missing",
-      coverageMax: "1000",
-      coverageMin: "100",
       group: "grp_atlas",
-      priority: "HIGH",
-      product: "Voluntary Life",
       query: "Morgan",
       reason: "MISSING_INFORMATION",
-      sort: "coverage_desc",
-      submitted: "missing_date",
+      sort: "priority_desc",
     })
   })
 

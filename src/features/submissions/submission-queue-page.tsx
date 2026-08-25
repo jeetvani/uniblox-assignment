@@ -13,7 +13,10 @@ import { QueueToolbar } from "./components/queue-toolbar"
 import { SubmissionDetailsSheet } from "./components/submission-details-sheet"
 import { SubmissionsTable } from "./components/submissions-table"
 import { useSubmissions } from "./hooks"
-import { orderSubmissionsForDisplay } from "./queue-sorting"
+import {
+  filterSubmissionsForDisplay,
+  orderSubmissionsForDisplay,
+} from "./queue-sorting"
 import { useQueueStore } from "./queue-store"
 import type { EmployerGroup, SubmissionFilters } from "./types"
 
@@ -111,13 +114,10 @@ export function SubmissionQueuePage() {
     query: queue.query,
     group: queue.group,
     reason: queue.reason,
-    product: queue.product,
-    priority: queue.priority,
-    submitted: queue.submitted,
-    completeness: queue.completeness,
-    coverageMinDollars: queue.coverageMinDollars,
-    coverageMaxDollars: queue.coverageMaxDollars,
-    sort: queue.sort,
+    sort:
+      queue.sort === "coverage_desc" || queue.sort === "coverage_asc"
+        ? "priority_desc"
+        : queue.sort,
   }
 
   const submissionsQuery = useSubmissions(filters)
@@ -127,16 +127,32 @@ export function SubmissionQueuePage() {
     [optionsQuery.data],
   )
 
-  const total = submissionsQuery.data?.total ?? 0
-  const totalPages = Math.max(1, Math.ceil(total / queue.pageSize))
   const orderedSubmissions = useMemo(
     () =>
       orderSubmissionsForDisplay(
-        submissionsQuery.data?.items ?? [],
+        filterSubmissionsForDisplay(submissionsQuery.data?.items ?? [], {
+          product: queue.product,
+          priority: queue.priority,
+          submitted: queue.submitted,
+          completeness: queue.completeness,
+          coverageMinDollars: queue.coverageMinDollars,
+          coverageMaxDollars: queue.coverageMaxDollars,
+        }),
         queue.sort,
       ),
-    [queue.sort, submissionsQuery.data?.items],
+    [
+      queue.completeness,
+      queue.coverageMaxDollars,
+      queue.coverageMinDollars,
+      queue.priority,
+      queue.product,
+      queue.sort,
+      queue.submitted,
+      submissionsQuery.data?.items,
+    ],
   )
+  const total = orderedSubmissions.length
+  const totalPages = Math.max(1, Math.ceil(total / queue.pageSize))
 
   useEffect(() => {
     if (page > totalPages) setPage(totalPages)

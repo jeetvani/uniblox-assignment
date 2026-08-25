@@ -49,17 +49,11 @@ export async function getSubmissions(
   if (filters.query?.trim()) params.set("query", filters.query.trim())
   if (filters.group) params.set("group", filters.group)
   if (filters.reason) params.set("reason", filters.reason)
-  if (filters.product) params.set("product", filters.product)
-  if (filters.priority) params.set("priority", filters.priority)
-  if (filters.submitted) params.set("submitted", filters.submitted)
-  if (filters.completeness) params.set("completeness", filters.completeness)
-  if ((filters.coverageMinDollars ?? 0) > 0) {
-    params.set("coverageMin", String(filters.coverageMinDollars))
-  }
-  if (filters.coverageMaxDollars != null) {
-    params.set("coverageMax", String(filters.coverageMaxDollars))
-  }
-  params.set("sort", filters.sort ?? "priority_desc")
+  const serverSort =
+    filters.sort === "coverage_desc" || filters.sort === "coverage_asc"
+      ? "priority_desc"
+      : (filters.sort ?? "priority_desc")
+  params.set("sort", serverSort)
 
   const response = await apiRequest<unknown>(
     `/api/submissions?${params.toString()}`,
